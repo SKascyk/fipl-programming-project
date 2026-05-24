@@ -39,9 +39,9 @@ def prga(s:list[int] , length: int) -> list[int]:
         keystream.append(s[t])
     return keystream
 
-# Main Function
+# Main Functions
 
-def encrypt(plain_text, key):
+def encrypt(plain_text: str, key: str) -> str:
     text_bytes, key_bytes = get_bytes(plain_text, key)
     length = len(text_bytes)
 
@@ -52,3 +52,19 @@ def encrypt(plain_text, key):
 
     encrypted_bytes = [p ^ g for p, g in zip(permuted_bytes, gamma)]
     return bytes(encrypted_bytes).hex()
+
+def decrypt(encrypted_hex_bytes: str, key: str) -> str:
+    encrypted_bytes = list(bytes.fromhex(encrypted_hex_bytes))
+    key_bytes = list(key.encode('utf-8'))
+    length = len(encrypted_bytes)
+    
+    extended_key = extend_key(key_bytes, length)
+    s = ksa(key_bytes)
+    gamma = prga(s, length)
+    permuted_bytes = [eb ^ g for eb, g in zip(encrypted_bytes, gamma)]
+
+    order = get_permutation_order(extended_key, length)
+    result = [0] * length
+    for i in range(length):
+        result[order[i]] = permuted_bytes[i]
+    return bytes(result).decode('utf-8')
