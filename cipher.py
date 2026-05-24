@@ -10,3 +10,12 @@ def extend_key(key_bytes, length):
     extended = key_bytes * (length // key_len)
     extended.extend(key_bytes[:length % key_len])
     return extended
+
+def get_permutation_order(extended_key, length):
+    pairs = [(extended_key[i], i) for i in range(length)]
+    pairs.sort()
+    return [idx for _, idx in pairs]
+
+def permute_bytes(text_bytes, extended_key, length):
+    order = get_permutation_order(extended_key, length)
+    return [text_bytes[order[i]] for i in range(length)]
