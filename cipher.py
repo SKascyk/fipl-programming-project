@@ -38,3 +38,17 @@ def prga(s, length):
         t = (s[i] + s[j]) % 256
         keystream.append(s[t])
     return keystream
+
+# Main Function
+
+def encrypt(plain_text, key):
+    text_bytes, key_bytes = get_bytes(plain_text, key)
+    length = len(text_bytes)
+
+    extended_key = extend_key(key_bytes, length)
+    permuted_bytes = permute_bytes(text_bytes, extended_key, length)
+    s = ksa(key_bytes)
+    gamma = prga(s, length)
+
+    encrypted_bytes = [p ^ g for p, g in zip(permuted_bytes, gamma)]
+    return bytes(encrypted_bytes).hex()
