@@ -3,10 +3,10 @@ def get_bytes(text, key):
     key_bytes = list(key.encode('utf-8'))
     return text_bytes, key_bytes
 
-text = input('Enter any text: ')
-key = input('Enter any key: ')
-
-text_b, key_b = get_bytes(text, key)
-print(f'''\nAfter get_bytes():
-{text_b} (text_bytes)
-{key_b} (key_bytes)''')
+def extend_key(key_bytes, length):
+    key_len = len(key_bytes)
+    if length <= key_len:
+        return key_bytes[:length]
+    extended = key_bytes * (length // key_len)
+    extended.extend(key_bytes[:length % key_len])
+    return extended
