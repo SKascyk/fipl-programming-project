@@ -19,3 +19,22 @@ def get_permutation_order(extended_key, length):
 def permute_bytes(text_bytes, extended_key, length):
     order = get_permutation_order(extended_key, length)
     return [text_bytes[order[i]] for i in range(length)]
+
+def ksa(key):
+    s = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + s[i] + key[i % len(key)]) % 256
+        s[i], s[j] = s[j], s[i]
+    return s
+
+def prga(s, length):
+    i = j = 0
+    keystream = []
+    for _ in range(length):
+        i = (i + 1) % 256
+        j = (j + s[i]) % 256
+        s[i], s[j] = s[j], s[i]
+        t = (s[i] + s[j]) % 256
+        keystream.append(s[t])
+    return keystream
