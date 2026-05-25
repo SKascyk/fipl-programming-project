@@ -28,7 +28,7 @@ def ksa(key: list[int]) -> list[int]:
         s[i], s[j] = s[j], s[i]
     return s
 
-def prga(s:list[int] , length: int) -> list[int]:
+def prga(s: list[int] , length: int) -> list[int]:
     i = j = 0
     keystream = []
     for _ in range(length):
